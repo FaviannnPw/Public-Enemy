@@ -1,250 +1,75 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#8d6e63" />
-  
-  <link id="pwa-manifest" rel="manifest" />
-  
-  <title>Adopt Me - PWA Kucing</title>
-  
+  <link rel="manifest" href="manifest.json" />
+  <title>Adopt Me - Kucing Lokal</title>
   <style>
-    :root {
-      --bg-color: #f5f5dc;
-      --card-bg: #fffaf0;
-      --primary: #8d6e63;
-      --text-main: #5d4037;
-      --accent: #795548;
-    }
-
+    :root { --bg: #f5f5dc; --card: #fffaf0; --text: #5d4037; --primary: #8d6e63; --accent: #795548; }
     @media (prefers-color-scheme: dark) {
-      :root {
-        --bg-color: #2d2a26;
-        --card-bg: #3d3833;
-        --primary: #a1887f;
-        --text-main: #e0d4cc;
-        --accent: #d7ccc8;
-      }
+      :root { --bg: #2d2a26; --card: #3d3833; --text: #e0d4cc; --primary: #a1887f; }
     }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      transition: all 0.3s ease;
-    }
-
-    .header {
-      background-color: var(--primary);
-      color: white;
-      padding: 30px 20px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .logo-container {
-      width: 80px;
-      height: 80px;
-      background-color: white;
-      border-radius: 50%;
-      margin-bottom: 15px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      border: 3px solid var(--accent);
-    }
-    
-    .logo-container img { width: 100%; height: 100%; object-fit: cover; }
-
-    .main { padding: 20px; max-width: 800px; margin: auto; }
-
-    .stats-container {
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 20px;
-      background: var(--card-bg);
-      padding: 15px;
-      border-radius: 15px;
-      font-weight: bold;
-    }
-
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 15px;
-    }
-
-    .card {
-      background-color: var(--card-bg);
-      border-radius: 15px;
-      padding: 15px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      border: 1px solid var(--accent);
-      cursor: pointer;
-      text-align: center;
-      transition: transform 0.2s;
-    }
-
+    body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; transition: 0.3s; }
+    .header { background: var(--primary); color: white; padding: 30px 20px; text-align: center; }
+    .logo-circle { width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto 15px; border: 3px solid var(--accent); overflow: hidden; }
+    .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
+    .stats { display: flex; justify-content: space-around; background: var(--card); padding: 15px; margin: 20px; border-radius: 15px; font-weight: bold; }
+    .main { padding: 0 20px; max-width: 600px; margin: auto; }
+    .card { background: var(--card); border-radius: 15px; padding: 15px; border: 1px solid var(--accent); margin-bottom: 15px; cursor: pointer; transition: 0.2s; text-align: center; }
     .meme-card:hover { transform: rotate(-3deg) scale(1.05); }
-
-    button {
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-      width: 100%;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-
-    .btn-meme { background-color: #ff9800; margin-bottom: 20px; }
-
-    /* Modal Form */
-    #adoption-form {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--card-bg);
-      padding: 25px;
-      border-radius: 20px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.3);
-      z-index: 100;
-      width: 85%;
-      max-width: 350px;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid var(--accent);
-      box-sizing: border-box;
-    }
-
-    .footer { text-align: center; padding: 20px; font-size: 0.8rem; opacity: 0.7; }
+    button { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 20px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    .btn-meme { background: #ff9800; margin-bottom: 20px; }
+    #adopt-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 25px; border-radius: 20px; box-shadow: 0 0 30px rgba(0,0,0,0.4); width: 85%; max-width: 350px; z-index: 100; }
+    input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid var(--accent); border-radius: 10px; box-sizing: border-box; background: var(--bg); color: var(--text); }
   </style>
 </head>
-
 <body>
-
   <header class="header">
-    <div class="logo-container">
-      <img src="URL_LOGO_KAMU_DI_SINI" alt="Logo" onerror="this.src='https://via.placeholder.com/80?text=CAT'">
-    </div>
+    <div class="logo-circle"><img src="URL_LOGO_KAMU_DI_SINI" alt="Logo" onerror="this.src='https://via.placeholder.com/80?text=CAT'"></div>
     <h1>Adopt Kucing 🐾</h1>
-    <p>Cari Teman Bulu di Timika & Sekitarnya</p>
+    <p>Timika & Sekitarnya</p>
   </header>
 
+  <div class="stats"><span>🐱 12 Ready</span><span>🏠 45 Adopted</span></div>
+
   <main class="main">
-    <div class="stats-container">
-      <span>🐱 12 Ready</span>
-      <span>🏠 45 Adopted</span>
-    </div>
-
     <button class="btn-meme" onclick="toggleMeme()">🎭 Mode Meme Kucing Lokal</button>
-
-    <div id="content-grid" class="grid-container"></div>
+    <div id="grid"></div>
   </main>
 
-  <div id="adoption-form">
-    <h3 id="form-title">Adopsi</h3>
-    <input type="text" id="user-name" placeholder="Nama Kamu">
-    <input type="number" id="user-wa" placeholder="Nomor WhatsApp">
-    <button onclick="sendWhatsApp()">Kirim ke WhatsApp</button>
-    <button style="background:none; color:gray;" onclick="closeForm()">Batal</button>
+  <div id="adopt-modal">
+    <h3 id="cat-target">Adopsi</h3>
+    <input type="text" id="nama" placeholder="Nama Anda">
+    <input type="number" id="wa" placeholder="Nomor WhatsApp">
+    <button onclick="gasWA()">Kirim ke WhatsApp</button>
+    <button style="background:none; color:gray;" onclick="tutup()">Batal</button>
   </div>
 
-  <footer class="footer">
-    <p>© 2026 Anwar Fauzi - Built for PWA</p>
-  </footer>
-
   <script>
-    // 1. OTOMATIS GENERATE MANIFEST (Biar gak ada error "No Manifest")
-    const manifest = {
-      "name": "Adopt Me Kucing",
-      "short_name": "AdoptMe",
-      "start_url": ".",
-      "display": "standalone",
-      "background_color": "#f5f5dc",
-      "theme_color": "#8d6e63",
-      "icons": [{ "src": "https://via.placeholder.com/192", "sizes": "192x192", "type": "image/png" }]
-    };
-    const stringManifest = JSON.stringify(manifest);
-    const blob = new Blob([stringManifest], {type: 'application/json'});
-    const manifestURL = URL.createObjectURL(blob);
-    document.querySelector('#pwa-manifest').setAttribute('href', manifestURL);
+    let isMeme = false;
+    let target = "";
+    const cats = [{n: "Oyen", l: "Timika", d: "Bar-bar tapi penyayang"}, {n: "Mochi", l: "Kuala Kencana", d: "Suka dipukpuk"}];
+    const memes = [{n: "Kucing Jaksel", l: "Jakarta", d: "Literally laper banget.."}, {n: "Kucing Papua", l: "Timika", d: "Tra lari, tra asik!"}];
 
-    // 2. FITUR ADOPSI & MEME
-    const adminWA = "6281234567890"; 
-    let selectedCat = "";
-    let isMemeMode = false;
-
-    const catData = [
-      { name: "Oyen", loc: "Timika", desc: "Bar bar tapi setia" },
-      { name: "Mochi", loc: "Mimika", desc: "Suka tidur di keyboard" }
-    ];
-
-    const memeData = [
-      { name: "Kucing Jaksel", loc: "Kemang", desc: "Literally laper banget.." },
-      { name: "Kucing Papua", loc: "Timika", desc: "Tra lari, tra asik!" }
-    ];
-
-    function renderGrid() {
-      const grid = document.getElementById('content-grid');
-      grid.innerHTML = "";
-      const data = isMemeMode ? memeData : catData;
-      data.forEach(item => {
-        const div = document.createElement('div');
-        div.className = `card ${isMemeMode ? 'meme-card' : ''}`;
-        div.onclick = () => openForm(item.name);
-        div.innerHTML = `<h3>${item.name}</h3><p>📍 ${item.loc}</p><p><i>"${item.desc}"</i></p>`;
-        grid.appendChild(div);
+    function render() {
+      const g = document.getElementById('grid'); g.innerHTML = "";
+      (isMeme ? memes : cats).forEach(i => {
+        g.innerHTML += `<div class="card ${isMeme?'meme-card':''}" onclick="buka('${i.n}')"><h3>${i.n}</h3><p>📍 ${i.l}</p><p><i>"${i.d}"</i></p></div>`;
       });
     }
-
-    function toggleMeme() {
-      isMemeMode = !isMemeMode;
-      document.querySelector('.btn-meme').innerText = isMemeMode ? "🔙 Kembali ke Adopsi" : "🎭 Mode Meme Kucing Lokal";
-      renderGrid();
+    function toggleMeme() { isMeme = !isMeme; render(); }
+    function buka(n) { target = n; document.getElementById('cat-target').innerText = "Adopsi " + n; document.getElementById('adopt-modal').style.display='block'; }
+    function tutup() { document.getElementById('adopt-modal').style.display='none'; }
+    function gasWA() {
+      const n = document.getElementById('nama').value;
+      if(!n) return alert("Isi nama dulu bos!");
+      window.open(`https://wa.me/6281234567890?text=Halo, saya ${n} ingin adopsi ${target}.`, '_blank');
+      tutup();
     }
-
-    function openForm(name) {
-      selectedCat = name;
-      document.getElementById('form-title').innerText = "Adopsi " + name;
-      document.getElementById('adoption-form').style.display = "block";
-    }
-
-    function closeForm() { document.getElementById('adoption-form').style.display = "none"; }
-
-    function sendWhatsApp() {
-      const name = document.getElementById('user-name').value;
-      const wa = document.getElementById('user-wa').value;
-      if(!name || !wa) return alert("Isi data dulu!");
-      const text = `Halo, saya ${name}. Saya mau tanya tentang kucing ${selectedCat}.`;
-      window.open(`https://wa.me/${adminWA}?text=${encodeURIComponent(text)}`, '_blank');
-      closeForm();
-    }
-
-    // 3. REGISTER SERVICE WORKER (Dummy agar PWA Valid)
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('data:text/javascript;base64,c2VsZi.hZGRFdmVudExpc3RlbmVyKCdmZXRjaCcsIGV2ZW50ID0+IHsgfSk7').catch(() => {});
-    }
-
-    renderGrid();
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').then(() => console.log("PWA Aktif!")); }
+    render();
   </script>
 </body>
 </html>
