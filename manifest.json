@@ -1,91 +1,56 @@
 {
-  "name": "Adopsi Kucing - Temukan Sahabat Berbulu Impianmu",
-  "short_name": "Adopsi Kucing",
-  "description": "Aplikasi untuk menemukan dan mengadopsi kucing impianmu. Temukan sahabat berbulu yang sempurna!",
-  "start_url": "/",
-  "id": "/",
+  "id": "./",
+  "name": "Game Spec Detector Pro",
+  "short_name": "GSD Pro",
+  "description": "Aplikasi Pendeteksi Kelayakan Laptop atau Pc dalam bermain game.",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#8B4513",
-  "theme_color": "#8B4513",
-  "orientation": "portrait-primary",
-  "scope": "/",
+  "background_color": "#4F46E5",
+  "theme_color": "#4F46E5",
+  "orientation": "portrait",
   "lang": "id",
-  "dir": "ltr",
-  "categories": ["lifestyle", "social"],
   "icons": [
     {
-      "src": "/icons/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-192x192.png",
+      "src": "icons/launchericon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "icons/launchericon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/maskable-icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/maskable-icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ],
   "screenshots": [
     {
-      "src": "/screenshots/screenshot-wide.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Halaman utama Adopsi Kucing di desktop"
+      "src": "icons/SS 1.png",
+      "sizes": "1920x1080",
+      "type": "image/png"
     },
     {
-      "src": "/screenshots/screenshot-narrow.png",
-      "sizes": "720x1280",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Halaman utama Adopsi Kucing di mobile"
+      "src": "icons/SS 2.png",
+      "sizes": "1920x1080",
+      "type": "image/png"
     }
   ],
   "shortcuts": [
     {
-      "name": "Lihat Semua Kucing",
-      "short_name": "Semua",
-      "description": "Lihat semua kucing yang tersedia",
-      "url": "/?filter=all",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Kucing Favorit",
-      "short_name": "Favorit",
-      "description": "Lihat kucing favorit Anda",
-      "url": "/?filter=favorit",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+      "name": "Buka Beranda",
+      "short_name": "Home",
+      "url": "./index.html",
+      "icons": [
+        {
+          "src": "icons/launchericon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
+  ],
+  "categories": [
+    "productivity",
+    "utilities"
   ]
 }
