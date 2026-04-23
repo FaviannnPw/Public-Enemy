@@ -1,561 +1,267 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#8B4513">
-  <title>Adopsi Kucing - Temukan Sahabat Berbulu Impianmu</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#4F46E5" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192x192-A.png" type="image/png" />
+  <title>Adopt Me - PWA Kucing</title>
+  
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-    body { font-family: 'Poppins', sans-serif; }
-    .wood-bg {
-      background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #8B4513 100%);
-      background-attachment: fixed;
+    :root {
+      --bg-color: #f5f5dc;
+      --card-bg: #fffaf0;
+      --primary: #8d6e63;
+      --text-main: #5d4037;
+      --accent: #795548;
     }
-    .dark-wood-bg {
-      background: linear-gradient(135deg, #1a0f05 0%, #2d1a0a 50%, #1a0f05 100%);
-      background-attachment: fixed;
+
+    /* Mode Gelap Halus */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-color: #2d2a26;
+        --card-bg: #3d3833;
+        --primary: #a1887f;
+        --text-main: #e0d4cc;
+        --accent: #d7ccc8;
+      }
     }
-    .card-hover:hover { transform: translateY(-8px); }
-    .meme-hover:hover { transform: rotate(1deg) scale(1.05); }
-    .toast { animation: slideUp 0.3s ease-out; }
-    @keyframes slideUp { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
-    .modal-content { animation: fadeIn 0.3s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-    .animate-bounce-slow { animation: bounce 2s infinite; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      transition: all 0.3s ease;
+    }
+
+    .header {
+      background-color: var(--primary);
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Slot Logo Lingkaran */
+    .logo-container {
+      width: 80px;
+      height: 80px;
+      background-color: white;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      border: 3px solid var(--accent);
+    }
+    
+    .logo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .main {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    /* Statistik Detail */
+    .stats-container {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 15px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border: 1px solid var(--accent);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      text-align: center;
+    }
+
+    /* Animasi Meme Playful */
+    .meme-card:hover {
+      transform: rotate(-3deg) scale(1.05);
+    }
+
+    .card h3 { margin: 10px 0 5px 0; }
+    .card p { font-size: 0.8rem; margin: 0; }
+
+    /* Modal / Form Adopsi */
+    #adoption-form {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      z-index: 100;
+      width: 90%;
+      max-width: 350px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid var(--accent);
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      width: 100%;
+      font-weight: bold;
+    }
+
+    .btn-meme {
+      background-color: #ff9800;
+      margin-bottom: 20px;
+    }
+
+    .footer { text-align: center; padding: 20px; color: var(--accent); }
   </style>
 </head>
-<body class="wood-bg min-h-screen transition-all duration-500" id="body">
 
-  <!-- HEADER -->
-  <header class="text-center pt-8 pb-6 px-4">
-    <!-- LOGO SLOT - Ganti URL_LOGO_KAMU_DI_SINI dengan link logo -->
-    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-amber-600 to-amber-800 mb-4 shadow-xl border-4 border-amber-100/30 overflow-hidden">
-      <!-- Uncomment baris di bawah dan ganti URL untuk logo custom -->
-      <!-- <img src="URL_LOGO_KAMU_DI_SINI" alt="Logo" class="w-full h-full object-cover"> -->
-      <i class="fas fa-paw text-4xl text-white"></i>
+<body>
+  <header class="header">
+    <div class="logo-container">
+      <img src="URL_LOGO_KAMU_DI_SINI" alt="Logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO'">
     </div>
-    
-    <h1 class="text-4xl md:text-5xl font-bold text-amber-50 mb-2 drop-shadow-lg flex items-center justify-center gap-3">
-      <i class="fas fa-cat"></i>
-      Adopsi Kucing
-      <i class="fas fa-cat"></i>
-    </h1>
-    <p class="text-amber-100 text-lg mb-6">Temukan sahabat berbulu impianmu</p>
-    
-    <div class="flex flex-wrap justify-center gap-3">
-      <button onclick="toggleDarkMode()" id="darkModeBtn" class="flex items-center gap-2 px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-full transition-all shadow-md hover:scale-105">
-        <i class="fas fa-moon" id="darkModeIcon"></i>
-        <span id="darkModeText">Mode Gelap</span>
-      </button>
-      <button onclick="toggleStats()" class="flex items-center gap-2 px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-full transition-all shadow-md hover:scale-105">
-        <i class="fas fa-chart-bar"></i> Statistik
-      </button>
-      <button onclick="toggleMemes()" id="memeBtn" class="flex items-center gap-2 px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-full transition-all shadow-md hover:scale-105">
-        <i class="fas fa-image"></i>
-        <span id="memeText">Meme Kucing Lokal</span>
-      </button>
-    </div>
+    <h1>Adopt Kucing 🐾</h1>
+    <p>Aplikasi Adopsi PWA Responsif</p>
   </header>
 
-  <!-- SEARCH BAR -->
-  <div id="searchSection" class="max-w-xl mx-auto px-4 mb-8">
-    <div class="relative">
-      <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-amber-800"></i>
-      <input type="text" id="searchInput" placeholder="Cari nama, warna, sifat, lokasi..." 
-             oninput="filterCats()"
-             class="w-full pl-12 pr-4 py-3 rounded-full bg-amber-50 text-amber-900 placeholder-amber-600 border-2 border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-lg">
+  <main class="main">
+    <div class="stats-container">
+      <span>🐱 12 Tersedia</span>
+      <span>🏠 45 Teradopsi</span>
+      <span>❤️ 100+ Relawan</span>
     </div>
-  </div>
 
-  <!-- MAIN CARD -->
-  <main class="max-w-6xl mx-auto px-4 pb-8">
-    <div class="rounded-3xl p-6 shadow-2xl bg-amber-200/90 backdrop-blur transition-all duration-500" id="mainCard">
-      
-      <!-- STATS ROW - Enhanced -->
-      <div id="statsRow" class="hidden grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-        <div class="stat-card p-4 rounded-2xl text-center bg-amber-100 hover:scale-105 transition-all">
-          <i class="fas fa-cat text-2xl text-amber-700 mb-2"></i>
-          <span class="block text-2xl font-bold text-amber-900" id="statTotal">8</span>
-          <span class="text-sm text-amber-700">Tersedia</span>
-        </div>
-        <div class="stat-card p-4 rounded-2xl text-center bg-amber-100 hover:scale-105 transition-all">
-          <i class="fas fa-check-circle text-2xl text-green-600 mb-2"></i>
-          <span class="block text-2xl font-bold text-amber-900">2</span>
-          <span class="text-sm text-amber-700">Diadopsi</span>
-        </div>
-        <div class="stat-card p-4 rounded-2xl text-center bg-amber-100 hover:scale-105 transition-all">
-          <i class="fas fa-clock text-2xl text-orange-500 mb-2"></i>
-          <span class="block text-2xl font-bold text-amber-900">1</span>
-          <span class="text-sm text-amber-700">Diproses</span>
-        </div>
-        <div class="stat-card p-4 rounded-2xl text-center bg-amber-100 hover:scale-105 transition-all">
-          <i class="fas fa-heart text-2xl text-red-500 mb-2"></i>
-          <span class="block text-2xl font-bold text-amber-900" id="statFav">0</span>
-          <span class="text-sm text-amber-700">Favorit</span>
-        </div>
-        <div class="stat-card p-4 rounded-2xl text-center bg-amber-100 hover:scale-105 transition-all">
-          <i class="fas fa-eye text-2xl text-purple-500 mb-2"></i>
-          <span class="block text-2xl font-bold text-amber-900">1,234</span>
-          <span class="text-sm text-amber-700">Kunjungan</span>
-        </div>
-        <div class="stat-card p-4 rounded-2xl text-center bg-amber-100 hover:scale-105 transition-all">
-          <i class="fas fa-paw text-2xl text-blue-500 mb-2"></i>
-          <span class="block text-2xl font-bold text-amber-900">3</span>
-          <span class="text-sm text-amber-700">Minggu Ini</span>
-        </div>
+    <button class="btn-meme" onclick="toggleMeme()">🎭 Lihat Meme Kucing Lokal</button>
+
+    <div id="content-grid" class="grid-container">
       </div>
-
-      <!-- FILTER BUTTONS -->
-      <div id="filterSection" class="flex flex-wrap gap-2 mb-6">
-        <button onclick="setFilter('all')" data-filter="all" class="filter-btn active flex items-center gap-2 px-4 py-2 rounded-full font-medium bg-amber-700 text-white shadow-lg">
-          <i class="fas fa-cat"></i> Semua
-        </button>
-        <button onclick="setFilter('kitten')" data-filter="kitten" class="filter-btn flex items-center gap-2 px-4 py-2 rounded-full font-medium bg-amber-100 text-amber-900 hover:bg-amber-200">
-          <i class="fas fa-paw"></i> Anak Kucing
-        </button>
-        <button onclick="setFilter('adult')" data-filter="adult" class="filter-btn flex items-center gap-2 px-4 py-2 rounded-full font-medium bg-amber-100 text-amber-900 hover:bg-amber-200">
-          <i class="fas fa-cat"></i> Dewasa
-        </button>
-        <button onclick="setFilter('senior')" data-filter="senior" class="filter-btn flex items-center gap-2 px-4 py-2 rounded-full font-medium bg-amber-100 text-amber-900 hover:bg-amber-200">
-          <i class="fas fa-heart"></i> Senior
-        </button>
-        <button onclick="setFilter('favorit')" data-filter="favorit" class="filter-btn flex items-center gap-2 px-4 py-2 rounded-full font-medium bg-amber-100 text-amber-900 hover:bg-amber-200">
-          <i class="fas fa-heart"></i> Favorit (<span id="favCount">0</span>)
-        </button>
-      </div>
-
-      <!-- CAT GRID -->
-      <div id="catGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
-
-      <!-- MEME GRID -->
-      <div id="memeGrid" class="hidden">
-        <h2 class="text-2xl font-bold mb-6 text-center text-amber-900" id="memeTitle">Meme Kucing Lokal Indonesia</h2>
-        <div id="memeContent" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-      </div>
-
-      <!-- EMPTY STATE -->
-      <div id="emptyState" class="hidden text-center py-12">
-        <i class="fas fa-cat text-6xl text-amber-700 opacity-50 mb-4"></i>
-        <p class="text-lg text-amber-800" id="emptyText">Tidak ada kucing yang ditemukan.</p>
-      </div>
-    </div>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="text-center py-6 text-amber-100/70">
-    <p class="flex items-center justify-center gap-2">
-      <i class="fas fa-sparkles"></i>
-      Made with <i class="fas fa-heart text-red-400"></i> for cats | UTS Project 2024
-      <i class="fas fa-sparkles"></i>
-    </p>
+  <div id="adoption-form">
+    <h3 id="form-title">Adopsi Kucing</h3>
+    <input type="text" id="user-name" placeholder="Nama Kamu" required>
+    <input type="number" id="user-wa" placeholder="Nomor WhatsApp Kamu" required>
+    <button onclick="sendWhatsApp()">Kirim ke WhatsApp Admin</button>
+    <button style="background:none; color:gray; font-size:0.8rem;" onclick="closeForm()">Batal</button>
+  </div>
+
+  <footer class="footer">
+    <p>© 2025 Anwar Fauzi</p>
   </footer>
 
-  <!-- MODAL DETAIL -->
-  <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onclick="closeModal(event)">
-    <div id="modalContent" class="modal-content relative max-w-lg w-full rounded-3xl overflow-hidden shadow-2xl bg-amber-50" onclick="event.stopPropagation()"></div>
-  </div>
+  <script>
+    const adminWA = "6281234567890"; // GANTI DENGAN NOMOR WA KAMU
+    let selectedCat = "";
+    let isMemeMode = false;
 
-  <!-- MODAL FORM ADOPSI -->
-  <div id="adoptModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onclick="closeAdoptModal(event)">
-    <div id="adoptModalContent" class="modal-content relative max-w-md w-full rounded-3xl overflow-hidden shadow-2xl bg-amber-50" onclick="event.stopPropagation()"></div>
-  </div>
+    const catData = [
+      { name: "Oyen", loc: "Jakarta", desc: "Suka makan kerupuk" },
+      { name: "Mochi", loc: "Bandung", desc: "Kalem dan manja" }
+    ];
 
-  <!-- TOAST -->
-  <div id="toast" class="toast fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-full bg-amber-900 text-white shadow-lg hidden"></div>
+    const memeData = [
+      { name: "Kucing Jaksel", loc: "SCBD", desc: "Which is sebenernya meong.." },
+      { name: "Kucing Surabaya", loc: "Tunjungan", desc: "Meong e banter cak!" }
+    ];
 
-<script>
-// DATA KUCING
-const catsData = [
-  { id: 1, name: "Milo", age: "3 bulan", category: "kitten", color: "Orange Tabby", gender: "Jantan", traits: ["Playful", "Curious", "Energetic"], location: "Jakarta Selatan", seed: 101 },
-  { id: 2, name: "Luna", age: "2 tahun", category: "adult", color: "Hitam Putih", gender: "Betina", traits: ["Calm", "Affectionate", "Independent"], location: "Bandung", seed: 202 },
-  { id: 3, name: "Simba", age: "8 tahun", category: "senior", color: "Golden", gender: "Jantan", traits: ["Gentle", "Loyal", "Quiet"], location: "Surabaya", seed: 303 },
-  { id: 4, name: "Bella", age: "5 bulan", category: "kitten", color: "Calico", gender: "Betina", traits: ["Sweet", "Shy", "Cuddly"], location: "Yogyakarta", seed: 404 },
-  { id: 5, name: "Oscar", age: "4 tahun", category: "adult", color: "Grey Tabby", gender: "Jantan", traits: ["Friendly", "Active", "Smart"], location: "Medan", seed: 505 },
-  { id: 6, name: "Cleo", age: "10 tahun", category: "senior", color: "Cream", gender: "Betina", traits: ["Wise", "Loving", "Peaceful"], location: "Semarang", seed: 606 },
-  { id: 7, name: "Tiger", age: "1 tahun", category: "adult", color: "Orange Stripe", gender: "Jantan", traits: ["Bold", "Adventurous", "Playful"], location: "Bali", seed: 707 },
-  { id: 8, name: "Nala", age: "4 bulan", category: "kitten", color: "White", gender: "Betina", traits: ["Innocent", "Fluffy", "Adorable"], location: "Malang", seed: 808 },
-];
-
-// DATA MEME KUCING LOKAL
-const memesData = [
-  { id: 1, location: "Jakarta Selatan", caption: "Kucing Jaksel be like: 'Literally gak bisa function tanpa wet food organic'", seed: 111 },
-  { id: 2, location: "Bandung", caption: "Kucing Bandung: 'Dingin-dingin gini enaknya rebahan di kasur hooman'", seed: 222 },
-  { id: 3, location: "Surabaya", caption: "Kucing Suroboyo: 'Cak, iki rawon e kok gak dikasih ke aku?'", seed: 333 },
-  { id: 4, location: "Yogyakarta", caption: "Kucing Jogja: 'Monggo mas, silakan elus-elus saya'", seed: 444 },
-  { id: 5, location: "Medan", caption: "Kucing Medan: 'Bah, mana ikan asin ku?!'", seed: 555 },
-  { id: 6, location: "Bali", caption: "Kucing Bali: 'Om Swastiastu, ada makanan gak?'", seed: 666 },
-];
-
-let favorites = JSON.parse(localStorage.getItem('catFavorites') || '[]');
-let currentFilter = 'all';
-let darkMode = false;
-let showMemes = false;
-let selectedCat = null;
-
-// ADMIN WHATSAPP NUMBER - GANTI DENGAN NOMOR ADMIN
-const ADMIN_WHATSAPP = "6281234567890";
-
-// INITIALIZE
-document.addEventListener('DOMContentLoaded', () => {
-  renderCats();
-  updateFavCount();
-});
-
-// RENDER CATS
-function renderCats() {
-  const grid = document.getElementById('catGrid');
-  const search = document.getElementById('searchInput').value.toLowerCase();
-  
-  let cats = catsData;
-  
-  if (currentFilter === 'favorit') {
-    cats = cats.filter(cat => favorites.includes(cat.id));
-  } else if (currentFilter !== 'all') {
-    cats = cats.filter(cat => cat.category === currentFilter);
-  }
-  
-  if (search) {
-    cats = cats.filter(cat => 
-      cat.name.toLowerCase().includes(search) ||
-      cat.color.toLowerCase().includes(search) ||
-      cat.traits.some(t => t.toLowerCase().includes(search)) ||
-      cat.location.toLowerCase().includes(search)
-    );
-  }
-  
-  if (cats.length === 0) {
-    grid.innerHTML = '';
-    document.getElementById('emptyState').classList.remove('hidden');
-    document.getElementById('emptyText').textContent = currentFilter === 'favorit' 
-      ? 'Belum ada kucing favorit. Klik ❤️ untuk menambahkan!' 
-      : 'Tidak ada kucing yang ditemukan.';
-    return;
-  }
-  
-  document.getElementById('emptyState').classList.add('hidden');
-  
-  grid.innerHTML = cats.map(cat => `
-    <div class="group rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 card-hover cursor-pointer ${darkMode ? 'bg-amber-900' : 'bg-amber-50'}" onclick="openModal(${cat.id})">
-      <div class="relative h-48 overflow-hidden">
-        <img src="https://cataas.com/cat?width=400&height=300&${cat.seed}" 
-             alt="${cat.name}" 
-             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-             onerror="this.src='https://placekitten.com/400/300?image=${cat.id}'">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        <button onclick="event.stopPropagation(); toggleFavorite(${cat.id})" class="absolute top-3 right-3 w-10 h-10 rounded-full bg-white/90 flex items-center justify-center shadow-md hover:scale-110 transition-transform">
-          <i class="fas fa-heart ${favorites.includes(cat.id) ? 'text-red-500' : 'text-gray-400'}"></i>
-        </button>
-        <span class="absolute bottom-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-amber-700 text-white flex items-center gap-1">
-          <i class="fas fa-paw text-xs"></i>
-          ${cat.category === 'kitten' ? 'Anak' : cat.category === 'adult' ? 'Dewasa' : 'Senior'}
-        </span>
-      </div>
-      <div class="p-4">
-        <div class="flex items-center justify-between mb-2">
-          <h3 class="text-xl font-bold ${darkMode ? 'text-amber-50' : 'text-amber-900'}">${cat.name}</h3>
-          <span class="text-sm ${darkMode ? 'text-amber-200' : 'text-amber-700'}">${cat.gender === 'Jantan' ? '♂️' : '♀️'} ${cat.age}</span>
-        </div>
-        <p class="text-sm mb-3 flex items-center gap-1 ${darkMode ? 'text-amber-200' : 'text-amber-700'}">
-          <i class="fas fa-map-marker-alt"></i> ${cat.location}
-        </p>
-        <div class="flex flex-wrap gap-1">
-          ${cat.traits.slice(0,2).map(t => `<span class="px-2 py-1 rounded-full text-xs ${darkMode ? 'bg-amber-800 text-amber-100' : 'bg-amber-200 text-amber-800'}">${t}</span>`).join('')}
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-// RENDER MEMES
-function renderMemes() {
-  const content = document.getElementById('memeContent');
-  content.innerHTML = memesData.map(meme => `
-    <div class="group rounded-2xl overflow-hidden shadow-lg transition-all duration-300 meme-hover ${darkMode ? 'bg-amber-900' : 'bg-amber-50'}">
-      <div class="relative h-48 overflow-hidden">
-        <img src="https://cataas.com/cat/says/${encodeURIComponent(meme.location)}?width=400&height=300&${meme.seed}" 
-             alt="${meme.location}" 
-             class="w-full h-full object-cover"
-             onerror="this.src='https://cataas.com/cat?width=400&height=300&${meme.seed}'">
-        <div class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold bg-red-500 text-white">
-          ${meme.location}
-        </div>
-      </div>
-      <div class="p-4">
-        <p class="text-sm italic ${darkMode ? 'text-amber-100' : 'text-amber-900'}">"${meme.caption}"</p>
-      </div>
-    </div>
-  `).join('');
-}
-
-// TOGGLE MEMES
-function toggleMemes() {
-  showMemes = !showMemes;
-  const memeBtn = document.getElementById('memeBtn');
-  const memeText = document.getElementById('memeText');
-  const catGrid = document.getElementById('catGrid');
-  const memeGrid = document.getElementById('memeGrid');
-  const filterSection = document.getElementById('filterSection');
-  const searchSection = document.getElementById('searchSection');
-  
-  if (showMemes) {
-    memeBtn.classList.remove('bg-amber-700', 'hover:bg-amber-800');
-    memeBtn.classList.add('bg-red-500', 'hover:bg-red-600');
-    memeText.textContent = 'Tutup Meme';
-    catGrid.classList.add('hidden');
-    memeGrid.classList.remove('hidden');
-    filterSection.classList.add('hidden');
-    searchSection.classList.add('hidden');
-    renderMemes();
-  } else {
-    memeBtn.classList.add('bg-amber-700', 'hover:bg-amber-800');
-    memeBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
-    memeText.textContent = 'Meme Kucing Lokal';
-    catGrid.classList.remove('hidden');
-    memeGrid.classList.add('hidden');
-    filterSection.classList.remove('hidden');
-    searchSection.classList.remove('hidden');
-  }
-}
-
-// TOGGLE FAVORITE
-function toggleFavorite(id) {
-  if (favorites.includes(id)) {
-    favorites = favorites.filter(f => f !== id);
-    showToast('Dihapus dari favorit');
-  } else {
-    favorites.push(id);
-    showToast('Ditambahkan ke favorit');
-  }
-  localStorage.setItem('catFavorites', JSON.stringify(favorites));
-  updateFavCount();
-  renderCats();
-}
-
-// UPDATE FAV COUNT
-function updateFavCount() {
-  document.getElementById('favCount').textContent = favorites.length;
-  document.getElementById('statFav').textContent = favorites.length;
-}
-
-// SET FILTER
-function setFilter(filter) {
-  currentFilter = filter;
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    if (btn.dataset.filter === filter) {
-      btn.classList.add('bg-amber-700', 'text-white', 'shadow-lg');
-      btn.classList.remove('bg-amber-100', 'text-amber-900');
-    } else {
-      btn.classList.remove('bg-amber-700', 'text-white', 'shadow-lg');
-      btn.classList.add('bg-amber-100', 'text-amber-900');
-    }
-  });
-  renderCats();
-}
-
-// FILTER CATS
-function filterCats() {
-  renderCats();
-}
-
-// TOGGLE STATS
-function toggleStats() {
-  const stats = document.getElementById('statsRow');
-  stats.classList.toggle('hidden');
-  stats.classList.toggle('grid');
-}
-
-// TOGGLE DARK MODE
-function toggleDarkMode() {
-  darkMode = !darkMode;
-  const body = document.getElementById('body');
-  const mainCard = document.getElementById('mainCard');
-  const icon = document.getElementById('darkModeIcon');
-  const text = document.getElementById('darkModeText');
-  const memeTitle = document.getElementById('memeTitle');
-  
-  if (darkMode) {
-    body.classList.remove('wood-bg');
-    body.classList.add('dark-wood-bg');
-    mainCard.classList.remove('bg-amber-200/90');
-    mainCard.classList.add('bg-amber-900/90');
-    icon.classList.remove('fa-moon');
-    icon.classList.add('fa-sun');
-    text.textContent = 'Mode Terang';
-    memeTitle.classList.remove('text-amber-900');
-    memeTitle.classList.add('text-amber-100');
-    document.querySelectorAll('.stat-card').forEach(card => {
-      card.classList.remove('bg-amber-100');
-      card.classList.add('bg-amber-800');
-    });
-  } else {
-    body.classList.add('wood-bg');
-    body.classList.remove('dark-wood-bg');
-    mainCard.classList.add('bg-amber-200/90');
-    mainCard.classList.remove('bg-amber-900/90');
-    icon.classList.add('fa-moon');
-    icon.classList.remove('fa-sun');
-    text.textContent = 'Mode Gelap';
-    memeTitle.classList.add('text-amber-900');
-    memeTitle.classList.remove('text-amber-100');
-    document.querySelectorAll('.stat-card').forEach(card => {
-      card.classList.add('bg-amber-100');
-      card.classList.remove('bg-amber-800');
-    });
-  }
-  renderCats();
-  if (showMemes) renderMemes();
-}
-
-// OPEN MODAL
-function openModal(id) {
-  selectedCat = catsData.find(c => c.id === id);
-  const modal = document.getElementById('modal');
-  const content = document.getElementById('modalContent');
-  
-  content.innerHTML = `
-    <button onclick="closeModal(event)" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70">
-      <i class="fas fa-times"></i>
-    </button>
-    <img src="https://cataas.com/cat?width=600&height=400&${selectedCat.seed}" alt="${selectedCat.name}" class="w-full h-64 object-cover" onerror="this.src='https://placekitten.com/600/400?image=${selectedCat.id}'">
-    <div class="p-6">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-3xl font-bold text-amber-900">${selectedCat.name}</h2>
-        <button onclick="toggleFavorite(${selectedCat.id})" class="p-3 rounded-full hover:scale-110 transition-all ${favorites.includes(selectedCat.id) ? 'bg-red-100 text-red-500' : 'bg-amber-200 text-amber-700'}">
-          <i class="fas fa-heart"></i>
-        </button>
-      </div>
-      <div class="space-y-3 text-amber-800">
-        <p><i class="fas fa-calendar text-amber-700 w-5"></i> <strong>Umur:</strong> ${selectedCat.age}</p>
-        <p><i class="fas fa-cat text-amber-700 w-5"></i> <strong>Warna:</strong> ${selectedCat.color}</p>
-        <p><i class="fas fa-map-marker-alt text-amber-700 w-5"></i> <strong>Lokasi:</strong> ${selectedCat.location}</p>
-        <p><span class="text-amber-700 w-5 inline-block text-center">${selectedCat.gender === 'Jantan' ? '♂️' : '♀️'}</span> <strong>Gender:</strong> ${selectedCat.gender}</p>
-      </div>
-      <div class="mt-4">
-        <p class="font-medium mb-2 text-amber-900">Sifat:</p>
-        <div class="flex flex-wrap gap-2">
-          ${selectedCat.traits.map(t => `<span class="px-3 py-1 rounded-full text-sm bg-amber-700 text-white">${t}</span>`).join('')}
-        </div>
-      </div>
-      <button onclick="openAdoptForm()" class="w-full mt-6 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white font-bold text-lg transition-colors shadow-lg flex items-center justify-center gap-2">
-        <i class="fab fa-whatsapp"></i> Adopsi via WhatsApp
-      </button>
-    </div>
-  `;
-  
-  modal.classList.remove('hidden');
-  modal.classList.add('flex');
-}
-
-// CLOSE MODAL
-function closeModal(event) {
-  if (event.target.id === 'modal' || event.target.closest('button')) {
-    document.getElementById('modal').classList.add('hidden');
-    document.getElementById('modal').classList.remove('flex');
-  }
-}
-
-// OPEN ADOPT FORM
-function openAdoptForm() {
-  document.getElementById('modal').classList.add('hidden');
-  document.getElementById('modal').classList.remove('flex');
-  
-  const modal = document.getElementById('adoptModal');
-  const content = document.getElementById('adoptModalContent');
-  
-  content.innerHTML = `
-    <button onclick="closeAdoptModal(event)" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70">
-      <i class="fas fa-times"></i>
-    </button>
-    <div class="p-6">
-      <div class="text-center mb-6">
-        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
-          <i class="fab fa-whatsapp text-3xl text-green-600"></i>
-        </div>
-        <h2 class="text-2xl font-bold text-amber-900">Formulir Adopsi</h2>
-        <p class="text-sm mt-2 text-amber-700">Mengadopsi: <strong>${selectedCat.name}</strong></p>
-      </div>
+    function renderGrid() {
+      const grid = document.getElementById('content-grid');
+      grid.innerHTML = "";
+      const data = isMemeMode ? memeData : catData;
       
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium mb-2 text-amber-900">
-            <i class="fas fa-user w-4 mr-2"></i>Nama Lengkap
-          </label>
-          <input type="text" id="adoptName" placeholder="Masukkan nama lengkap" 
-                 class="w-full px-4 py-3 rounded-xl border-2 border-amber-600 bg-white text-amber-900 placeholder-amber-500 focus:outline-none focus:ring-2 focus:ring-green-500">
-        </div>
-        
-        <div>
-          <label class="block text-sm font-medium mb-2 text-amber-900">
-            <i class="fas fa-phone w-4 mr-2"></i>Nomor WhatsApp
-          </label>
-          <input type="tel" id="adoptWhatsapp" placeholder="contoh: 081234567890" 
-                 class="w-full px-4 py-3 rounded-xl border-2 border-amber-600 bg-white text-amber-900 placeholder-amber-500 focus:outline-none focus:ring-2 focus:ring-green-500">
-        </div>
-        
-        <div class="p-4 rounded-xl bg-amber-100">
-          <p class="text-sm text-amber-800">
-            <strong>Info Kucing:</strong><br>
-            ${selectedCat.name} - ${selectedCat.age} - ${selectedCat.color}<br>
-            Lokasi: ${selectedCat.location}
-          </p>
-        </div>
-        
-        <button onclick="submitAdoptForm()" class="w-full py-3 rounded-full bg-green-600 hover:bg-green-700 text-white font-bold text-lg transition-colors shadow-lg flex items-center justify-center gap-2">
-          <i class="fas fa-paper-plane"></i> Kirim via WhatsApp
-        </button>
-      </div>
-    </div>
-  `;
-  
-  modal.classList.remove('hidden');
-  modal.classList.add('flex');
-}
+      data.forEach(item => {
+        const div = document.createElement('div');
+        div.className = `card ${isMemeMode ? 'meme-card' : ''}`;
+        div.onclick = () => openForm(item.name);
+        div.innerHTML = `
+          <h3>${item.name}</h3>
+          <p>📍 ${item.loc}</p>
+          <p><i>"${item.desc}"</i></p>
+        `;
+        grid.appendChild(div);
+      });
+    }
 
-// CLOSE ADOPT MODAL
-function closeAdoptModal(event) {
-  if (event.target.id === 'adoptModal' || event.target.closest('button[onclick*="closeAdoptModal"]')) {
-    document.getElementById('adoptModal').classList.add('hidden');
-    document.getElementById('adoptModal').classList.remove('flex');
-  }
-}
+    function toggleMeme() {
+      isMemeMode = !isMemeMode;
+      document.querySelector('.btn-meme').innerText = isMemeMode ? "🔙 Kembali ke Adopsi" : "🎭 Lihat Meme Kucing Lokal";
+      renderGrid();
+    }
 
-// SUBMIT ADOPT FORM
-function submitAdoptForm() {
-  const name = document.getElementById('adoptName').value;
-  const whatsapp = document.getElementById('adoptWhatsapp').value;
-  
-  if (!name || !whatsapp) {
-    showToast('Mohon isi semua data!');
-    return;
-  }
-  
-  const message = encodeURIComponent(
-    `Halo Admin! Saya ${name} ingin mengadopsi kucing:\n\n` +
-    `Nama Kucing: ${selectedCat.name}\n` +
-    `Umur: ${selectedCat.age}\n` +
-    `Warna: ${selectedCat.color}\n` +
-    `Lokasi: ${selectedCat.location}\n\n` +
-    `Nomor WA saya: ${whatsapp}\n\n` +
-    `Mohon informasi lebih lanjut. Terima kasih!`
-  );
-  
-  window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${message}`, '_blank');
-  
-  document.getElementById('adoptModal').classList.add('hidden');
-  document.getElementById('adoptModal').classList.remove('flex');
-  showToast('Mengarahkan ke WhatsApp...');
-}
+    function openForm(name) {
+      selectedCat = name;
+      document.getElementById('form-title').innerText = "Adopsi " + name;
+      document.getElementById('adoption-form').style.display = "block";
+    }
 
-// SHOW TOAST
-function showToast(message) {
-  const toast = document.getElementById('toast');
-  toast.textContent = message;
-  toast.classList.remove('hidden');
-  setTimeout(() => toast.classList.add('hidden'), 3000);
-}
-</script>
+    function closeForm() {
+      document.getElementById('adoption-form').style.display = "none";
+    }
+
+    function sendWhatsApp() {
+      const name = document.getElementById('user-name').value;
+      const wa = document.getElementById('user-wa').value;
+      
+      if(!name || !wa) return alert("Isi data dulu ya!");
+
+      const text = `Halo Admin, saya ${name} (${wa}). Saya tertarik untuk mengadopsi/bertanya tentang ${selectedCat}. Mohon infonya!`;
+      const url = `https://wa.me/${adminWA}?text=${encodeURIComponent(text)}`;
+      
+      window.open(url, '_blank');
+      closeForm();
+    }
+
+    // Pendaftaran Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(() => console.log('SW registered!'))
+        .catch(err => console.error('SW gagal:', err));
+    }
+
+    renderGrid();
+  </script>
 </body>
 </html>
