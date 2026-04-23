@@ -3,39 +3,102 @@
   "short_name": "Adopsi Kucing",
   "description": "Aplikasi untuk menemukan dan mengadopsi kucing impianmu. Temukan sahabat berbulu yang sempurna!",
   "start_url": "/",
+  "id": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
   "background_color": "#8B4513",
   "theme_color": "#8B4513",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "id",
-  "categories": ["lifestyle", "social"],
+  "dir": "ltr",
+  "categories": ["lifestyle", "social", "entertainment"],
+  "prefer_related_applications": false,
   "icons": [
     {
-      "src": "icons/icon-192x192.png",
-      "sizes": "192x192",
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
-      "src": "icons/icon-512x512.png",
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/maskable-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "screenshots": [
     {
-      "src": "screenshots/screenshot-wide.png",
+      "src": "/screenshots/screenshot-wide.jpg",
       "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide"
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Halaman utama Adopsi Kucing di desktop"
     },
     {
-      "src": "screenshots/screenshot-narrow.png",
+      "src": "/screenshots/screenshot-narrow.jpg",
       "sizes": "720x1280",
-      "type": "image/png",
-      "form_factor": "narrow"
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Halaman utama Adopsi Kucing di mobile"
     }
-  ]
-}
+  ],
+  "shortcuts": [
+    {
+      "name": "Lihat Semua Kucing",
+      "short_name": "Semua",
+      "description": "Lihat semua kucing yang tersedia",
+      "url": "/?filter=all",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Kucing
