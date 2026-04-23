@@ -1,591 +1,319 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#6366f1" />
-    <link rel="icon" href="icons/icon-192x192-A.png" type="image/png" />
-    <link rel="manifest" href="manifest.json">
-    <title>TaskFlow - Kelola Tugas Anda</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --primary-light: #818cf8;
-            --bg-dark: #ffffff;
-            --bg-card: #1e293b;
-            --text-light: #f8fafc;
-            --text-gray: #cbd5e1;
-            --success: #22c55e;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, #1856bb 100%);
-            color: var(--text-light);
-            min-height: 100vh;
-            padding-bottom: 80px;
-        }
-
-        .header {
-            background: #1856bb;
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
-
-        .header-content {
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-        }
-
-        h1 {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .stats {
-            display: flex;
-            gap: 16px;
-            font-size: 14px;
-            color: var(--text-gray);
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .stat-number {
-            color: var(--primary-light);
-            font-weight: 700;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 24px 20px;
-        }
-
-        .input-section {
-            background: var(--bg-card);
-            padding: 24px;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(99, 102, 241, 0.1);
-        }
-
-        .input-group {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        input[type="text"] {
-            flex: 1;
-            padding: 14px 18px;
-            background: var(--bg-dark);
-            border: 2px solid rgba(99, 102, 241, 0.3);
-            border-radius: 12px;
-            color: var(--text-light);
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-        }
-
-        .btn {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .priority-selector {
-            display: flex;
-            gap: 8px;
-        }
-
-        .priority-btn {
-            flex: 1;
-            padding: 10px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            background: transparent;
-            color: var(--text-gray);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .priority-btn.active {
-            border-color: currentColor;
-            background: rgba(255, 255, 255, 0.1);
-            font-weight: 600;
-        }
-
-        .priority-btn.high {
-            color: var(--danger);
-        }
-
-        .priority-btn.medium {
-            color: var(--warning);
-        }
-
-        .priority-btn.low {
-            color: var(--success);
-        }
-
-        .filter-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-        }
-
-        .filter-tab {
-            padding: 10px 20px;
-            background: var(--bg-card);
-            border: 2px solid transparent;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            font-size: 14px;
-            font-weight: 500;
-            color: #ffffff;
-        }
-
-        .filter-tab.active {
-            background: var(--primary);
-            border-color: var(--primary-light);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-
-        .tasks-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .task-item {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 4px solid;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            transition: all 0.3s ease;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .task-item:hover {
-            transform: translateX(4px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        }
-
-        .task-item.high {
-            border-left-color: var(--danger);
-        }
-
-        .task-item.medium {
-            border-left-color: var(--warning);
-        }
-
-        .task-item.low {
-            border-left-color: var(--success);
-        }
-
-        .task-checkbox {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--primary);
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: all 0.3s ease;
-        }
-
-        .task-checkbox:hover {
-            background: rgba(99, 102, 241, 0.1);
-        }
-
-        .task-checkbox.checked {
-            background: var(--primary);
-        }
-
-        .task-content {
-            flex: 1;
-        }
-
-        .task-text {
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
-
-        .task-text.completed {
-            text-decoration: line-through;
-            opacity: 0.6;
-        }
-
-        .task-meta {
-            display: flex;
-            gap: 12px;
-            font-size: 12px;
-            color: var(--text-gray);
-        }
-
-        .task-time {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .task-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-icon {
-            width: 36px;
-            height: 36px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            font-size: 18px;
-        }
-
-        .btn-delete {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-
-        .btn-delete:hover {
-            background: var(--danger);
-            color: white;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-gray);
-        }
-
-        .empty-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-
-        .progress-bar {
-            background: var(--bg-card);
-            height: 8px;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 16px 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light));
-            transition: width 0.5s ease;
-            border-radius: 4px;
-        }
-
-        @media (max-width: 640px) {
-            .header-content {
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .input-group {
-                flex-direction: column;
-            }
-
-            .stats {
-                width: 100%;
-                justify-content: space-around;
-            }
-        }
-
-        .logo h1 {
-            font-size: 50px;
-            font-weight: 800;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#8B4513">
+  <title>Adopsi Kucing - Temukan Sahabat Berbulu Impianmu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+    body { font-family: 'Poppins', sans-serif; }
+    .wood-bg {
+      background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #8B4513 100%);
+      background-attachment: fixed;
+    }
+    .card-hover:hover { transform: translateY(-8px); }
+    .toast { animation: slideUp 0.3s ease-out; }
+    @keyframes slideUp { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+    .modal-content { animation: fadeIn 0.3s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  </style>
 </head>
+<body class="wood-bg min-h-screen">
 
-<body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <div class="logo-icon">✓</div>
-                <h1 class="text-judul">TaskFlow</h1>
-            </div>
-            <div class="stats">
-                <div class="stat-item">
-                    <span>📝</span>
-                    <span>Total: <span class="stat-number" id="totalTasks">0</span></span>
-                </div>
-                <div class="stat-item">
-                    <span>✅</span>
-                    <span>Selesai: <span class="stat-number" id="completedTasks">0</span></span>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="input-section">
-            <div class="input-group">
-                <input type="text" id="taskInput" placeholder="Tambahkan tugas baru..."
-                    onkeypress="if(event.key==='Enter') addTask()" />
-                <button class="btn btn-primary" onclick="addTask()">
-                    <span>➕</span>
-                    <span>Tambah</span>
-                </button>
-            </div>
-            <div class="priority-selector">
-                <button class="priority-btn high" onclick="setPriority('high')">🔴 Tinggi</button>
-                <button class="priority-btn medium active" onclick="setPriority('medium')">🟡 Sedang</button>
-                <button class="priority-btn low" onclick="setPriority('low')">🟢 Rendah</button>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressBar" style="width: 0%"></div>
-            </div>
-        </div>
-
-        <div class="filter-tabs">
-            <button class="filter-tab active" onclick="filterTasks('all')">Semua</button>
-            <button class="filter-tab" onclick="filterTasks('active')">Aktif</button>
-            <button class="filter-tab" onclick="filterTasks('completed')">Selesai</button>
-            <button class="filter-tab" onclick="filterTasks('high')">🔴 Prioritas Tinggi</button>
-            <button class="filter-tab" onclick="filterTasks('medium')">🟡 Prioritas Sedang</button>
-            <button class="filter-tab" onclick="filterTasks('low')">🟢 Prioritas Rendah</button>
-        </div>
-
-        <div class="tasks-list" id="tasksList"></div>
+  <!-- HEADER -->
+  <header class="text-center pt-8 pb-6 px-4">
+    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-amber-700 mb-4 shadow-lg">
+      <i class="fas fa-paw text-4xl text-white"></i>
     </div>
+    <h1 class="text-4xl md:text-5xl font-bold text-amber-50 mb-2 drop-shadow-lg">🐱 Adopsi Kucing</h1>
+    <p class="text-amber-100 text-lg mb-6">Temukan sahabat berbulu impianmu</p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <button onclick="toggleDarkMode()" id="darkModeBtn" class="flex items-center gap-2 px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-full transition-all shadow-md">
+        <i class="fas fa-moon"></i> Mode Gelap
+      </button>
+      <button onclick="toggleStats()" class="flex items-center gap-2 px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-full transition-all shadow-md">
+        <i class="fas fa-chart-bar"></i> Statistik
+      </button>
+    </div>
+  </header>
 
-    <script>
-        let tasks = [];
-        let currentPriority = 'medium';
-        let currentFilter = 'all';
+  <!-- SEARCH BAR -->
+  <div class="max-w-xl mx-auto px-4 mb-8">
+    <div class="relative">
+      <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-amber-800"></i>
+      <input type="text" id="searchInput" placeholder="Cari nama, warna, sifat, lokasi..." 
+             oninput="filterCats()"
+             class="w-full pl-12 pr-4 py-3 rounded-full bg-amber-50 text-amber-900 placeholder-amber-600 border-2 border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-lg">
+    </div>
+  </div>
 
-        function loadTasks() {
-            const saved = localStorage.getItem('taskflow_tasks');
-            if (saved) {
-                tasks = JSON.parse(saved);
-                renderTasks();
-            }
-        }
+  <!-- MAIN CARD -->
+  <main class="max-w-6xl mx-auto px-4 pb-8">
+    <div class="rounded-3xl p-6 shadow-2xl bg-amber-200/90 backdrop-blur" id="mainCard">
+      
+      <!-- STATS ROW -->
+      <div id="statsRow" class="hidden grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="p-4 rounded-2xl text-center bg-amber-100">
+          <i class="fas fa-cat text-2xl text-amber-700 mb-2"></i>
+          <span class="block text-2xl font-bold text-amber-900" id="statTotal">8</span>
+          <span class="text-sm text-amber-700">Tersedia</span>
+        </div>
+        <div class="p-4 rounded-2xl text-center bg-amber-100">
+          <i class="fas fa-check-circle text-2xl text-green-600 mb-2"></i>
+          <span class="block text-2xl font-bold text-amber-900">2</span>
+          <span class="text-sm text-amber-700">Diadopsi</span>
+        </div>
+        <div class="p-4 rounded-2xl text-center bg-amber-100">
+          <i class="fas fa-clock text-2xl text-orange-500 mb-2"></i>
+          <span class="block text-2xl font-bold text-amber-900">1</span>
+          <span class="text-sm text-amber-700">Diproses</span>
+        </div>
+        <div class="p-4 rounded-2xl text-center bg-amber-100">
+          <i class="fas fa-heart text-2xl text-red-500 mb-2"></i>
+          <span class="block text-2xl font-bold text-amber-900" id="statFav">0</span>
+          <span class="text-sm text-amber-700">Favorit</span>
+        </div>
+      </div>
 
-        function saveTasks() {
-            localStorage.setItem('taskflow_tasks', JSON.stringify(tasks));
-        }
+      <!-- FILTER BUTTONS -->
+      <div class="flex flex-wrap gap-2 mb-6">
+        <button onclick="setFilter('all')" data-filter="all" class="filter-btn active px-4 py-2 rounded-full font-medium bg-amber-700 text-white shadow-lg">🐱 Semua</button>
+        <button onclick="setFilter('kitten')" data-filter="kitten" class="filter-btn px-4 py-2 rounded-full font-medium bg-amber-100 text-amber-900 hover:bg-amber-200">🐈 Anak Kucing</button>
+        <button onclick="setFilter('adult')" data-filter="adult" class="filter-btn px-4 py-2 rounded-full font-medium bg-amber-100 text-amber-900 hover:bg-amber-200">😺 Dewasa</button>
+        <button onclick="setFilter('senior')" data-filter="senior" class="filter-btn px-4 py-2 rounded-full font-medium bg-amber-100 text-amber-900 hover:bg-amber-200">😸 Senior</button>
+        <button onclick="setFilter('favorit')" data-filter="favorit" class="filter-btn px-4 py-2 rounded-full font-medium bg-amber-100 text-amber-900 hover:bg-amber-200">❤️ Favorit (<span id="favCount">0</span>)</button>
+      </div>
 
-        function setPriority(priority) {
-            currentPriority = priority;
-            document.querySelectorAll('.priority-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-        }
+      <!-- CAT GRID -->
+      <div id="catGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
 
-        function addTask() {
-            const input = document.getElementById('taskInput');
-            const text = input.value.trim();
+      <!-- EMPTY STATE -->
+      <div id="emptyState" class="hidden text-center py-12">
+        <i class="fas fa-cat text-6xl text-amber-700 opacity-50 mb-4"></i>
+        <p class="text-lg text-amber-800" id="emptyText">Tidak ada kucing yang ditemukan.</p>
+      </div>
+    </div>
+  </main>
 
-            if (text === '') return;
+  <!-- FOOTER -->
+  <footer class="text-center py-6 text-amber-100/70">
+    <p><i class="fas fa-sparkles"></i> Made with ❤️ for cats | UTS Project 2024 <i class="fas fa-sparkles"></i></p>
+  </footer>
 
-            const task = {
-                id: Date.now(),
-                text: text,
-                completed: false,
-                priority: currentPriority,
-                createdAt: new Date().toLocaleString('id-ID')
-            };
+  <!-- MODAL -->
+  <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onclick="closeModal(event)">
+    <div id="modalContent" class="modal-content relative max-w-lg w-full rounded-3xl overflow-hidden shadow-2xl bg-amber-50" onclick="event.stopPropagation()"></div>
+  </div>
 
-            tasks.unshift(task);
-            input.value = '';
-            saveTasks();
-            renderTasks();
-        }
+  <!-- TOAST -->
+  <div id="toast" class="toast fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-full bg-amber-900 text-white shadow-lg hidden"></div>
 
-        function toggleTask(id) {
-            const task = tasks.find(t => t.id === id);
-            if (task) {
-                task.completed = !task.completed;
-                saveTasks();
-                renderTasks();
-            }
-        }
+<script>
+// DATA KUCING
+const catsData = [
+  { id: 1, name: "Milo", age: "3 bulan", category: "kitten", color: "Orange Tabby", gender: "Jantan", traits: ["Playful", "Curious", "Energetic"], location: "Jakarta Selatan", seed: 101 },
+  { id: 2, name: "Luna", age: "2 tahun", category: "adult", color: "Hitam Putih", gender: "Betina", traits: ["Calm", "Affectionate", "Independent"], location: "Bandung", seed: 202 },
+  { id: 3, name: "Simba", age: "8 tahun", category: "senior", color: "Golden", gender: "Jantan", traits: ["Gentle", "Loyal", "Quiet"], location: "Surabaya", seed: 303 },
+  { id: 4, name: "Bella", age: "5 bulan", category: "kitten", color: "Calico", gender: "Betina", traits: ["Sweet", "Shy", "Cuddly"], location: "Yogyakarta", seed: 404 },
+  { id: 5, name: "Oscar", age: "4 tahun", category: "adult", color: "Grey Tabby", gender: "Jantan", traits: ["Friendly", "Active", "Smart"], location: "Medan", seed: 505 },
+  { id: 6, name: "Cleo", age: "10 tahun", category: "senior", color: "Cream", gender: "Betina", traits: ["Wise", "Loving", "Peaceful"], location: "Semarang", seed: 606 },
+  { id: 7, name: "Tiger", age: "1 tahun", category: "adult", color: "Orange Stripe", gender: "Jantan", traits: ["Bold", "Adventurous", "Playful"], location: "Bali", seed: 707 },
+  { id: 8, name: "Nala", age: "4 bulan", category: "kitten", color: "White", gender: "Betina", traits: ["Innocent", "Fluffy", "Adorable"], location: "Malang", seed: 808 },
+];
 
-        function deleteTask(id) {
-            tasks = tasks.filter(t => t.id !== id);
-            saveTasks();
-            renderTasks();
-        }
+let favorites = JSON.parse(localStorage.getItem('catFavorites') || '[]');
+let currentFilter = 'all';
+let darkMode = false;
 
-        function filterTasks(filter) {
-            currentFilter = filter;
-            document.querySelectorAll('.filter-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            renderTasks();
-        }
+// INITIALIZE
+document.addEventListener('DOMContentLoaded', () => {
+  renderCats();
+  updateFavCount();
+});
 
-        function renderTasks() {
-            const container = document.getElementById('tasksList');
+// RENDER CATS
+function renderCats() {
+  const grid = document.getElementById('catGrid');
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  
+  let cats = catsData;
+  
+  // Filter by category
+  if (currentFilter === 'favorit') {
+    cats = cats.filter(cat => favorites.includes(cat.id));
+  } else if (currentFilter !== 'all') {
+    cats = cats.filter(cat => cat.category === currentFilter);
+  }
+  
+  // Filter by search
+  if (search) {
+    cats = cats.filter(cat => 
+      cat.name.toLowerCase().includes(search) ||
+      cat.color.toLowerCase().includes(search) ||
+      cat.traits.some(t => t.toLowerCase().includes(search)) ||
+      cat.location.toLowerCase().includes(search)
+    );
+  }
+  
+  if (cats.length === 0) {
+    grid.innerHTML = '';
+    document.getElementById('emptyState').classList.remove('hidden');
+    document.getElementById('emptyText').textContent = currentFilter === 'favorit' 
+      ? 'Belum ada kucing favorit. Klik ❤️ untuk menambahkan!' 
+      : 'Tidak ada kucing yang ditemukan.';
+    return;
+  }
+  
+  document.getElementById('emptyState').classList.add('hidden');
+  
+  grid.innerHTML = cats.map(cat => `
+    <div class="group rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 card-hover cursor-pointer ${darkMode ? 'bg-amber-900' : 'bg-amber-50'}" onclick="openModal(${cat.id})">
+      <div class="relative h-48 overflow-hidden">
+        <img src="https://cataas.com/cat?width=400&height=300&${cat.seed}" 
+             alt="${cat.name}" 
+             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+             onerror="this.src='https://placekitten.com/400/300?image=${cat.id}'">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        <button onclick="event.stopPropagation(); toggleFavorite(${cat.id})" class="absolute top-3 right-3 w-10 h-10 rounded-full bg-white/90 flex items-center justify-center shadow-md hover:scale-110 transition-transform">
+          <i class="fas fa-heart ${favorites.includes(cat.id) ? 'text-red-500' : 'text-gray-400'}"></i>
+        </button>
+        <span class="absolute bottom-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-amber-700 text-white">
+          ${cat.category === 'kitten' ? '🐈 Anak' : cat.category === 'adult' ? '😺 Dewasa' : '😸 Senior'}
+        </span>
+      </div>
+      <div class="p-4">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xl font-bold ${darkMode ? 'text-amber-50' : 'text-amber-900'}">${cat.name}</h3>
+          <span class="text-sm ${darkMode ? 'text-amber-200' : 'text-amber-700'}">${cat.gender === 'Jantan' ? '♂️' : '♀️'} ${cat.age}</span>
+        </div>
+        <p class="text-sm mb-3 flex items-center gap-1 ${darkMode ? 'text-amber-200' : 'text-amber-700'}">
+          <i class="fas fa-map-marker-alt"></i> ${cat.location}
+        </p>
+        <div class="flex flex-wrap gap-1">
+          ${cat.traits.slice(0,2).map(t => `<span class="px-2 py-1 rounded-full text-xs ${darkMode ? 'bg-amber-800 text-amber-100' : 'bg-amber-200 text-amber-800'}">${t}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
 
-            let filteredTasks = tasks;
+// TOGGLE FAVORITE
+function toggleFavorite(id) {
+  if (favorites.includes(id)) {
+    favorites = favorites.filter(f => f !== id);
+    showToast('Dihapus dari favorit 💔');
+  } else {
+    favorites.push(id);
+    showToast('Ditambahkan ke favorit ❤️');
+  }
+  localStorage.setItem('catFavorites', JSON.stringify(favorites));
+  updateFavCount();
+  renderCats();
+}
 
-            if (currentFilter === 'active') {
-                filteredTasks = tasks.filter(t => !t.completed);
-            } else if (currentFilter === 'completed') {
-                filteredTasks = tasks.filter(t => t.completed);
-            } else if (['high', 'medium', 'low'].includes(currentFilter)) {
-                filteredTasks = tasks.filter(t => t.priority === currentFilter);
-            }
+// UPDATE FAV COUNT
+function updateFavCount() {
+  document.getElementById('favCount').textContent = favorites.length;
+  document.getElementById('statFav').textContent = favorites.length;
+}
 
-            if (filteredTasks.length === 0) {
-                container.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon">📋</div>
-            <h3>Tidak ada tugas</h3>
-            <p>Mulai tambahkan tugas baru untuk memulai!</p>
-          </div>
-        `;
-            } else {
-                container.innerHTML = filteredTasks.map(task => `
-          <div class="task-item ${task.priority}">
-            <div class="task-checkbox ${task.completed ? 'checked' : ''}" onclick="toggleTask(${task.id})">
-              ${task.completed ? '✓' : ''}
-            </div>
-            <div class="task-content">
-              <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
-              <div class="task-meta">
-                <span class="task-time">🕒 ${task.createdAt}</span>
-                <span>📌 ${task.priority === 'high' ? 'Tinggi' : task.priority === 'medium' ? 'Sedang' : 'Rendah'}</span>
-              </div>
-            </div>
-            <div class="task-actions">
-              <button class="btn-icon btn-delete" onclick="deleteTask(${task.id})">🗑️</button>
-            </div>
-          </div>
-        `).join('');
-            }
+// SET FILTER
+function setFilter(filter) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    if (btn.dataset.filter === filter) {
+      btn.classList.add('bg-amber-700', 'text-white', 'shadow-lg');
+      btn.classList.remove('bg-amber-100', 'text-amber-900');
+    } else {
+      btn.classList.remove('bg-amber-700', 'text-white', 'shadow-lg');
+      btn.classList.add('bg-amber-100', 'text-amber-900');
+    }
+  });
+  renderCats();
+}
 
-            updateStats();
-        }
+// FILTER CATS
+function filterCats() {
+  renderCats();
+}
 
-        function updateStats() {
-            const total = tasks.length;
-            const completed = tasks.filter(t => t.completed).length;
-            const progress = total > 0 ? (completed / total) * 100 : 0;
+// TOGGLE STATS
+function toggleStats() {
+  const stats = document.getElementById('statsRow');
+  stats.classList.toggle('hidden');
+  stats.classList.toggle('grid');
+}
 
-            document.getElementById('totalTasks').textContent = total;
-            document.getElementById('completedTasks').textContent = completed;
-            document.getElementById('progressBar').style.width = progress + '%';
-        }
+// TOGGLE DARK MODE
+function toggleDarkMode() {
+  darkMode = !darkMode;
+  document.body.classList.toggle('bg-amber-950');
+  document.getElementById('mainCard').classList.toggle('bg-amber-900/90');
+  document.getElementById('mainCard').classList.toggle('bg-amber-200/90');
+  document.getElementById('darkModeBtn').innerHTML = darkMode 
+    ? '<i class="fas fa-sun"></i> Mode Terang' 
+    : '<i class="fas fa-moon"></i> Mode Gelap';
+  renderCats();
+}
 
-        loadTasks();
+// OPEN MODAL
+function openModal(id) {
+  const cat = catsData.find(c => c.id === id);
+  const modal = document.getElementById('modal');
+  const content = document.getElementById('modalContent');
+  
+  content.innerHTML = `
+    <button onclick="closeModal(event)" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70">
+      <i class="fas fa-times"></i>
+    </button>
+    <img src="https://cataas.com/cat?width=600&height=400&${cat.seed}" alt="${cat.name}" class="w-full h-64 object-cover" onerror="this.src='https://placekitten.com/600/400?image=${cat.id}'">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-3xl font-bold text-amber-900">${cat.name}</h2>
+        <button onclick="toggleFavorite(${cat.id})" class="p-3 rounded-full ${favorites.includes(cat.id) ? 'bg-red-100 text-red-500' : 'bg-amber-200 text-amber-700'}">
+          <i class="fas fa-heart ${favorites.includes(cat.id) ? '' : 'far'}"></i>
+        </button>
+      </div>
+      <div class="space-y-3 text-amber-800">
+        <p><i class="fas fa-calendar text-amber-700 w-5"></i> <strong>Umur:</strong> ${cat.age}</p>
+        <p><i class="fas fa-cat text-amber-700 w-5"></i> <strong>Warna:</strong> ${cat.color}</p>
+        <p><i class="fas fa-map-marker-alt text-amber-700 w-5"></i> <strong>Lokasi:</strong> ${cat.location}</p>
+        <p><span class="text-amber-700">${cat.gender === 'Jantan' ? '♂️' : '♀️'}</span> <strong>Gender:</strong> ${cat.gender}</p>
+      </div>
+      <div class="mt-4">
+        <p class="font-medium mb-2 text-amber-900">Sifat:</p>
+        <div class="flex flex-wrap gap-2">
+          ${cat.traits.map(t => `<span class="px-3 py-1 rounded-full text-sm bg-amber-700 text-white">${t}</span>`).join('')}
+        </div>
+      </div>
+      <button class="w-full mt-6 py-3 rounded-full bg-amber-700 hover:bg-amber-800 text-white font-bold text-lg transition-colors shadow-lg">
+        🏠 Adopsi ${cat.name}
+      </button>
+    </div>
+  `;
+  
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+}
 
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js')
-                    .then(() => console.log('Service Worker registered'))
-                    .catch(err => console.error('Service Worker error:', err));
-            });
-        }
-    </script>
+// CLOSE MODAL
+function closeModal(event) {
+  if (event.target.id === 'modal' || event.target.closest('button')) {
+    document.getElementById('modal').classList.add('hidden');
+    document.getElementById('modal').classList.remove('flex');
+  }
+}
 
+// SHOW TOAST
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.remove('hidden');
+  setTimeout(() => toast.classList.add('hidden'), 3000);
+}
+</script>
 </body>
-
 </html>
